@@ -2,13 +2,14 @@ import numpy as np
 
 class MultiAgentReplayBuffer:
     def __init__(self, max_size, critic_dims, actor_dims, 
-            n_actions, n_agents, batch_size):
+            n_actions, n_agents, batch_size,agent_names):
         self.mem_size = max_size
         self.mem_cntr = 0
         self.n_agents = n_agents
         self.actor_dims = actor_dims
         self.batch_size = batch_size
         self.n_actions = n_actions
+        self.agent_names = agent_names
 
         self.state_memory = np.zeros((self.mem_size, critic_dims))
         self.new_state_memory = np.zeros((self.mem_size, critic_dims))
@@ -46,14 +47,14 @@ class MultiAgentReplayBuffer:
         
         index = self.mem_cntr % self.mem_size
 
-        for agent_idx in range(self.n_agents):
-            self.actor_state_memory[agent_idx][index] = raw_obs[agent_idx]
-            self.actor_new_state_memory[agent_idx][index] = raw_obs_[agent_idx]
-            self.actor_action_memory[agent_idx][index] = action[agent_idx]
+        for agent_idx, agent_name in enumerate(self.agent_names):
+            self.actor_state_memory[agent_idx][index] = raw_obs[agent_name]
+            self.actor_new_state_memory[agent_idx][index] = raw_obs_[agent_name]
+            self.actor_action_memory[agent_idx][index] = action[agent_name]
 
         self.state_memory[index] = state
         self.new_state_memory[index] = state_
-        self.reward_memory[index] = reward
+        self.reward_memory[index] = [i for i in reward.values()]
         self.terminal_memory[index] = done
         self.mem_cntr += 1
 

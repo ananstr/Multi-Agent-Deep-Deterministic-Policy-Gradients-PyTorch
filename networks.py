@@ -3,7 +3,7 @@ import torch as T
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
-
+# T.autograd.set_detect_anomaly(True)
 class CriticNetwork(nn.Module):
     def __init__(self, beta, input_dims, fc1_dims, fc2_dims, 
                     n_agents, n_actions, name, chkpt_dir):
